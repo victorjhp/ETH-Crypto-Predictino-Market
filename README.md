@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Prediction Market (Next.js)
+
+A minimal on-chain prediction market interface built with Next.js and Chainlink Price Feeds. The application displays a live ETH/USD chart using real data from the Chainlink Aggregator contract and provides a modular UI for prediction market interactions.
+
+## Features
+
+- Live ETH/USD price pulled directly from Chainlink (`latestRoundData`)
+- Rolling 20-minute chart, updated every 2 minutes
+- Prefilled initial chart history for clean initial rendering
+- Modular components for prediction flows
+- Typed blockchain reads using TypeScript and viem
+
+## Tech Stack
+
+Next.js (App Router), TypeScript, viem, Recharts.
+
+## Environment Setup
+
+Create a `.env.local` file:
+
+NEXT_PUBLIC_RPC_URL=https://mainnet.infura.io/v3/
+<YOUR_KEY>
+NEXT_PUBLIC_CHAIN_ID=1
+NEXT_PUBLIC_CHAINLINK_ETHUSD_ADDRESS=0x5f4ec3df9cbd43714fe2740f5e3616155c5b8419
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
 
-```bash
+npm install
+
+Start the development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` in a browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+src/
+└─ abi/
+├─ AggregatorV3Interface.json
+├─ SimplePredictionMarket.json
+└─ components/
+├─ LivePriceChart.tsx
+├─ MarketCard.tsx
+├─ BetPanel.tsx
+├─ ResultPanel.tsx
+└─ WalletButton.tsx
+app/
+├─ layout.tsx
+├─ page.tsx
+└─ globals.css
 
-## Learn More
+## Chainlink Price Feed (Core Logic)
 
-To learn more about Next.js, take a look at the following resources:
+const result = await client.readContract({
+address: process.env.NEXT_PUBLIC_CHAINLINK_ETHUSD_ADDRESS as 0x${string},
+abi: AggregatorV3Interface,
+functionName: "latestRoundData",
+});
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+const price = Number(result[1]) / 1e8;
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deployment
 
-## Deploy on Vercel
+npm run build
+npm run start
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
